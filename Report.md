@@ -8,6 +8,12 @@ In order to better help friends and family find new music, I have decided to cre
 
 The dataset used for this project was `song_data.csv` from Spotify. We are looking at 1 output, the song popularity, and 4 input variables (length, danceability, loudness, and tempo) over the 18836 songs. The data was split into 80% training and 20% testing.
 
+## How to Run
+
+First, install the requirements using `pip install -r requirements.txt`. Then, run the `main.py` file. This will run the model and output the results to the console.
+
+Next, call python main.py. This will run the model and output the results to the console.
+
 ## The Models
 
 ### Artificial Neural Network
