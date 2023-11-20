@@ -59,7 +59,7 @@ Even adjusting down to fewer layers maintained the same general horizonal shape,
 
 Random forest is an ensemble learning algorithm that uses a collection of decision trees to make predictions. Each decision tree is trained on a different subset of the data, and the predictions of all the trees are averaged to produce the final prediction. [(1)](https://www.analyticsvidhya.com/blog/2021/06/understanding-random-forest/#:~:text=Random%20forest%20is%20an%20ensemble,to%20produce%20the%20final%20prediction.)
 
-The random forest was significantly better than the ANN. Using this strategy the model was able to develop some semblance of shape and more closely follow the actual data. The model was able to predict the popularity of a song with an accuracy of 78%, with an MSE of 327.5.
+The random forest was significantly better than the ANN. Using this strategy the model was able to develop some semblance of shape and more closely follow the actual data. The model was able to predict the popularity of a song with an MSE of 327.5.
 
 While the shape is not ideal, looking more like an x^3 curve, than a linear prediciton, but it is much better than the ANN. The model was able to identify the general highs and lows for the values.
 
@@ -86,3 +86,9 @@ The following images illustrate the gradual improvement of the model:
 ![Random Forest 5](./images/RF_2000_347.27.png)
 
 This also used a smaller testing model, only 15 percent of the total rather than 20 percent. This was done to increase the number of trees that could be used in training. Notice how on this, the midsection between 40 and 60 is fatter, with more data points falling into that range.
+
+#### 4000 Trees with Depth of 50
+
+![Random Forest 6](./images/RF_4000_d_50.png)
+
+This model had worse accuracy than the 2000 tree model, with only 32% of results within 5 of the expected outcome and 53% within 10. This is likely due to overfitting of the trees to the dataset.

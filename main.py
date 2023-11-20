@@ -42,17 +42,40 @@ def setup():
 def evaluateModel(y_pred, y_test):
     # Evaluate the model on the test set
     print(" \n--- Evaluating the Model ---\n")
-    print("Accuracy: ", calc_accuracy(y_test, y_pred))
+    closeness = 5
+    print(
+        f"Accuracy with {closeness} popularity levels: {round(calc_accuracy(y_test, y_pred, closeness) * 100, 2)}%",
+    )
+    closeness = 10
+    print(
+        f"Accuracy with {closeness} popularity levels: {round(calc_accuracy(y_test, y_pred, closeness) * 100, 2)}%",
+    )
     mse = calc_mse(y_test, y_pred)
     print("Mean Squared Error: ", mse)
     return mse
 
 
-def calc_accuracy(y_test, y_pred):
-    errors = abs(y_pred - y_test)
-    mape = 100 * (errors / (y_test + (y_test == 0)))
-    accuracy = abs(100 - np.mean(mape))
-    return accuracy
+def calc_accuracy(y_test, y_pred: np.ndarray, closeness: int):
+    """
+    Calculates the accuracy of the model by checking how many predictions are within X of the true value
+    :param y_test: The true values
+    :param y_pred: The predicted values
+    :param closeness: The closeness to check for
+    :return: The accuracy of the model in the range [0, 1]
+    """
+    # Find the accuracy of the model
+    within_closeness = 0
+    y_test = y_test.values
+    for i in range(len(y_pred)):
+        # Cleaup the predictions between 0 and 100
+        if y_pred[i] < 0:
+            y_pred[i] = 0
+        elif y_pred[i] > 100:
+            y_pred[i] = 100
+        # Now check if it is within 5 of the true value
+        if abs(y_pred[i] - y_test[i]) <= closeness:
+            within_closeness += 1
+    return within_closeness / len(y_pred)
 
 
 def calc_mse(y_test, y_pred):
@@ -132,11 +155,12 @@ def main():
     features, target = setup()
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
-        features, target, test_size=0.5, random_state=0
+        features, target, test_size=0.2, random_state=0
     )
     estimators = 2000
     model = runRandomForest(X_train, y_train, estimators)
-    # model = load("song_predictor_rf_2000.joblib")
+    # put name of model you want to load here
+    # model = load( "song_predictor_rf_500.joblib")
     y_pred = model.predict(X_test)
     mse = evaluateModel(y_pred, y_test)
     # Plot the predictions against the truth
