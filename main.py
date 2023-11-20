@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.ensemble import RandomForestRegressor
@@ -9,24 +8,26 @@ from joblib import dump, load  # https://scikit-learn.org/stable/model_persisten
 import matplotlib.pyplot as plt
 
 
-def plot_predictions(y_true, predictions, mse, estimators):
+def plot_predictions(y_real, y_pred, mse, estimators):
+    mse = round(mse, 2)
     plt.figure(figsize=(8, 6))
-    plt.scatter(y_true, predictions, alpha=0.5, label="Predictions", color="blue")
-    plt.scatter(y_true, y_true, alpha=0.5, label="True Values", color="orange")
+    plt.scatter(y_real, y_pred, alpha=0.5, label="Predictions", color="blue")
+    plt.scatter(y_real, y_real, alpha=0.5, label="True Values", color="orange")
     plt.xlabel("True Values [Song Popularity]")
     plt.ylabel("Predictions [Song Popularity]")
-    plt.title(f"Song Popularity Predictions MSE: {round(mse, 2)}")
+    plt.title(f"Song Popularity Predictions MSE: {mse}")
     plt.axis("equal")
     plt.axis("square")
     plt.xlim([0, 100])
     plt.ylim([0, 100])
     plt.legend()
-    _ = plt.plot(
-        [-100, 100], [-100, 100], color="red"
-    )  # Plot a diagonal line for reference
+    # Plot a diagonal line for reference
+    # _ = plt.plot(
+    #     [-100, 100], [-100, 100], color="red"
+    # )
     # plt.show()
     # save the plot
-    plt.savefig(f"RF_{estimators}.png")
+    plt.savefig(f"RF_{estimators}_{mse}.png")
 
 
 def setup():
@@ -36,6 +37,26 @@ def setup():
     features = data[["song_duration_ms", "danceability", "loudness", "tempo"]]
     target = data["song_popularity"]
     return features, target
+
+
+def evaluateModel(y_pred, y_test):
+    # Evaluate the model on the test set
+    print(" \n--- Evaluating the Model ---\n")
+    print("Accuracy: ", calc_accuracy(y_test, y_pred))
+    mse = calc_mse(y_test, y_pred)
+    print("Mean Squared Error: ", mse)
+    return mse
+
+
+def calc_accuracy(y_test, y_pred):
+    errors = abs(y_pred - y_test)
+    mape = 100 * (errors / (y_test + (y_test == 0)))
+    accuracy = abs(100 - np.mean(mape))
+    return accuracy
+
+
+def calc_mse(y_test, y_pred):
+    return np.mean((y_test - y_pred) ** 2)
 
 
 def runAnn(
@@ -90,31 +111,12 @@ def runAnn(
     return model
 
 
-def calc_accuracy(y_test, y_pred):
-    errors = abs(y_pred - y_test)
-    mape = 100 * (errors / (y_test + (y_test == 0)))
-    accuracy = abs(100 - np.mean(mape))
-    return accuracy
-
-
-def calc_mse(y_test, y_pred):
-    return np.mean((y_test - y_pred) ** 2)
-
-
-def evaluateModel(y_pred, y_test):
-    # Evaluate the model on the test set
-    print(" \n--- Evaluating the Model ---\n")
-    print("Accuracy: ", calc_accuracy(y_test, y_pred))
-    mse = calc_mse(y_test, y_pred)
-    print("Mean Squared Error: ", mse)
-    return mse
-
-
-def runRandomForsest(X_train, y_train, estimators):
+def runRandomForest(X_train, y_train, estimators):
     print(f" \n--- Training the Model with {estimators} Trees ---\n")
     filename = "song_predictor_rf_" + str(estimators) + ".joblib"
     # Create a Random Forest Regressor
     startTime = pd.Timestamp.now()
+    # Specifc the number of trees to use for estimation, the max depth of each tree and the verbosity for logging
     model = RandomForestRegressor(
         n_estimators=estimators, max_depth=50, verbose=1, random_state=0
     )
@@ -128,12 +130,12 @@ def runRandomForsest(X_train, y_train, estimators):
 
 def main():
     features, target = setup()
-    estimators = 5000
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
-        features, target, test_size=0.2, random_state=0
+        features, target, test_size=0.5, random_state=0
     )
-    model = runRandomForsest(X_train, y_train, estimators)
+    estimators = 2000
+    model = runRandomForest(X_train, y_train, estimators)
     # model = load("song_predictor_rf_2000.joblib")
     y_pred = model.predict(X_test)
     mse = evaluateModel(y_pred, y_test)
