@@ -1,7 +1,5 @@
 # Song Popularity Predictions
 
-<!-- TODO: Go much more detailed into what a random forest is doing and how it works. Discuss why more estimations are not improving the overall picture. -->
-
 ## Introduction
 
 In order to better help friends and family find new music, I have decided to create a model that will predict the popularity of a song based on its audio features. Using the dataset `song_data.csv` from Spotify, I was able to create a model that predicts the popularity of a song based on its audio features. This is a useful model for helping artists and people predict how well their music will do as a streamable song.
@@ -12,9 +10,15 @@ The dataset used for this project was `song_data.csv` from Spotify. We are looki
 
 ## How to Run
 
-First, install the requirements using `pip install -r requirements.txt`. Then, run the `main.py` file. This will run the model and output the results to the console.
+First, install the requirements using `pip install -r requirements.txt`.
 
-Next, run `python main.py`. This will run the model and output the results to the console.
+### Run the ANN
+
+The ANN is in `ann.py` can be run by inputing `python ann.py`. This will run the training and output a model. If you would like to load the model and run it, you can change the variable `load` in `ann.py` to `True`, input the model you would like to run, and then run the file.
+
+### Run the Random Forest
+
+The random forest is in `random_forest.py` and can be run by inputing `python forest.py`. If you would like to load a model and run it, you can change the variable `load` in `forest.py` to `True`, add the filename you would like to read, and then run the python program.
 
 ## The Models
 
@@ -55,6 +59,16 @@ The model itself looked like this:
 
 Even adjusting down to fewer layers maintained the same general horizonal shape, finding a good average value, but not predicing a spedific song's popularity well.
 
+The best output we were able to get from the ANN was:
+
+```text
+Accuracy within 5 popularity levels: 1.62%
+Accuracy within 10 popularity levels: 3.53%
+Mean Squared Error:  2704.880541544996
+```
+
+As you can see, the accuracy was very low, and the MSE was very high. This is not a useful model.
+
 ### Random Forest
 
 Random forest is an ensemble learning algorithm that uses a collection of decision trees to make predictions. Each decision tree is trained on a different subset of the data, and the predictions of all the trees are averaged to produce the final prediction. [(1)](https://www.analyticsvidhya.com/blog/2021/06/understanding-random-forest/#:~:text=Random%20forest%20is%20an%20ensemble,to%20produce%20the%20final%20prediction.)
@@ -69,17 +83,19 @@ The following images illustrate the gradual improvement of the model:
 
 ![Random Forest 1](./images/RF_1000.png)
 
+Here we can see an improvement from the ANN, because of the trailing edge leading up towards the more popular values. However, the model is still predicting an inaccurate shape.
+
 #### 2000 Trees
 
 ![Random Forest 2](./images/RF-2000.png)
+
+Running on 2000 trees the system had 34% of results within 5 of the expected outcome and 55% within 10. This is a significant improvement over the ANN. The tails are becoming strong as we increase the number of trees.
 
 #### 3000 Trees
 
 ![Random Forest 3](./images/RF_3000.png)
 
-#### 2000 Trees with Depth of 40
-
-![Random Forest 4](./images/RF_2000_depth_40.png)
+Here we see the diminishing returns compared to 2000 trees.
 
 #### 2000 Trees with Depth of 50
 

@@ -4,3 +4,5 @@
 __pycache__
 *.ipynb
 .venv/
+*.h5
+*.ipynb
