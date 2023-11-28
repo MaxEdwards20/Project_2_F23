@@ -23,6 +23,10 @@ def evaluateModel(y_pred, y_test):
     print(
         f"Accuracy within {closeness} popularity levels: {round(calc_accuracy(y_test, y_pred, closeness) * 100, 2)}%",
     )
+    closeness = 25
+    print(
+        f"Accuracy within {closeness} popularity levels: {round(calc_accuracy(y_test, y_pred, closeness) * 100, 2)}%",
+    )
     mse = calc_mse(y_test, y_pred)
     print("Mean Squared Error: ", mse)
     return mse

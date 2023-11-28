@@ -45,15 +45,15 @@ def runAnn(
 
     # Train the model
     print(" \n--- Training the Model ---\n")
-    history = model.fit(X_train_scaled, y_train, epochs=50, validation_split=0.1)
+    history = model.fit(X_train_scaled, y_train, epochs=100, validation_split=0.1)
 
     # Persist the Model
-    model.save("song_predictor.h5")
+    model.save("ann.h5")
     return model
 
 
 def main():
-    loadModel = False
+    loadModel = True
     features, target = setup()
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
@@ -61,7 +61,7 @@ def main():
     )
     if loadModel:
         # load the song_predictor.h5 model
-        model = tf.keras.models.load_model("song_predictor.h5")
+        model = tf.keras.models.load_model("./persistedModels/ann.h5")
     else:
         # We are training the model
         model = runAnn(X_train, y_train)
