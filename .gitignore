@@ -6,4 +6,4 @@ __pycache__
 .venv/
 *.h5
 *.ipynb
-*.mp4
+# *.mp4
