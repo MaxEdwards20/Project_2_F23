@@ -4,6 +4,8 @@
 
 In order to better help friends and family find new music, I have decided to create a model that will predict the popularity of a song based on its audio features. Using the dataset `song_data.csv` from Spotify, I was able to create a model that predicts the popularity of a song based on its audio features. While the best accuracy for a song within 5 of its actual value was 41% with a CART model, I can predict the quartile of each song with about 84% accuracy using a Random Forest model. Using these models, artists and people can predict how well their music will do as a streamable song.
 
+While I was expecting to be able to predict the output with much higher accuracy, it is possible that these particular data points do not actually correlate well with a song's popularity and are therefore not super useful values. Perhaps with additional data points and a larger data set I would be able to get a more accurate model.
+
 ## Data
 
 The dataset used for this project was `song_data.csv` from Spotify. We are looking at 1 output, the song popularity, and 4 input variables (length, danceability, loudness, and tempo) over the set of 18,836 songs. The data was split into 80% training and 20% testing.
